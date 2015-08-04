@@ -27,12 +27,12 @@ module FunSftp
     end
 
     def setup_login
-      Net::SFTP.start(server, user, password: password)
+      Net::SFTP.start(server, user, :password => password)
     end
 
     def upload!(src, target) #send to remote
       #target example: 'some_directory/some_name.txt'
-      opts = { progress: UploadCallbacks.new, recursive: true }
+      opts = { :progress => UploadCallbacks.new, :recursive => true }
       converted_target = clean_path(target)
       opts.delete(:progress) unless FunSftp.loggable?
       opts.delete(:recursive) unless has_directory?(target)
@@ -40,7 +40,7 @@ module FunSftp
     end
 
     def download!(target, src) #fetch locally from remote
-      opts = { progress: DownloadCallbacks.new, recursive: true}
+      opts = { :progress => DownloadCallbacks.new, :recursive => true}
       converted_target = clean_path(target)
       opts.delete(:progress) unless FunSftp.loggable?
       opts.delete(:recursive) unless has_directory?(target)
@@ -132,7 +132,7 @@ module FunSftp
       if path.start_with? '~'
         path.sub(/~/, '.')
       else
-        Pathname(join_to_pwd(path)).cleanpath.to_path
+        Pathname(join_to_pwd(path)).cleanpath.to_s
       end
     end
 
